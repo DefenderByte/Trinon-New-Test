@@ -650,6 +650,23 @@ exports.drone = {
         DRAW_HEALTH: false,
     };
 
+exports.launchmissile = {
+    PARENT: [exports.bullet],
+    LABEL: 'Missile',
+    INDEPENDENT: true,
+    BODY: {
+        RANGE: 120,
+    },  
+    GUNS: [ { /*** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
+        POSITION: [  14,     6,      1,      0,     -2,     180,     0,   ], 
+            PROPERTIES: {
+                AUTOFIRE: true,
+                SHOOT_SETTINGS: combineStats([g.basic, g.skim, g.doublereload, g.lowpower, g.muchmorerecoil, g.morespeed]),
+                TYPE: [exports.bullet, { PERSISTS_AFTER_DEATH: true, }],
+                STAT_CALCULATOR: gunCalcNames.thruster,
+            }, },
+    ],
+};
 exports.missile = {
     PARENT: [exports.bullet],
     LABEL: 'Missile',
@@ -2588,18 +2605,18 @@ exports.basic = {
             },
             GUNS: [ { /**** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
                 POSITION: [  4.5,    10,      1,     10.5,    0,      0,      0,   ], 
-                        }, {
+                    }, {
                 POSITION: [   1,     12,      1,      15,     0,      0,      0,   ], 
-                    ERTIES: {
-                    MAX_CHILDREN: 4,
-                    SHOOT_SETTINGS: combineStats([g.factory, g.babyfactory]),
-                    TYPE: exports.minion,
-                    STAT_CALCULATOR: gunCalcNames.drone,
-                    AUTOFIRE: true,
-                    SYNCS_SKILLS: true,
-                    , {
-                    POSITION: [  3.5,    12,      1,      8,      0,      0,      0,   ], 
-                   
+                    PROPERTIES: {
+                        MAX_CHILDREN: 4,
+                        SHOOT_SETTINGS: combineStats([g.factory, g.babyfactory]),
+                        TYPE: exports.minion,
+                        STAT_CALCULATOR: gunCalcNames.drone,
+                        AUTOFIRE: true,
+                        SYNCS_SKILLS: true,
+                    }, }, {
+                POSITION: [  3.5,    12,      1,      8,      0,      0,      0,   ], 
+                    },
             ],
         };
             exports.factory = {
@@ -3128,6 +3145,24 @@ exports.basic = {
                             SHOOT_SETTINGS: combineStats([g.basic, g.pound, g.arty]),
                             TYPE: exports.bullet,
                             LABEL: 'Heavy',
+                        }, },
+                ],
+            };
+            exports.launch = {
+                PARENT: [exports.genericTank],
+                BODY: {
+                    FOV: base.FOV * 1.05,
+                },
+                LABEL: 'Launcher',
+                DANGER: 6,
+                GUNS: [ { /*** LENGTH  WIDTH   ASPECT    X       Y     ANGLE   DELAY */
+                    POSITION: [  10,    12,    -0.5,     9,      0,      0,      0,  ], 
+                        }, {
+                    POSITION: [  17,    13,      1,      0,      0,      0,      0,  ], 
+                        PROPERTIES: {
+                            SHOOT_SETTINGS: combineStats([g.basic, g.pound, g.arty, g.skim]),
+                            TYPE: exports.launchmissile,
+                            STAT_CALCULATOR: gunCalcNames.sustained,
                         }, },
                 ],
             };
@@ -4264,8 +4299,12 @@ exports.basic.UPGRADES_TIER_1 = [exports.twin, exports.sniper, exports.machine, 
         exports.auto3.UPGRADES_TIER_3 = [exports.auto5, exports.heavy3, exports.auto4];
         exports.flanktrap.UPGRADES_TIER_3 = [exports.bushwhack, exports.guntrap, exports.fortress, exports.bomber];
 
-    exports.director.UPGRADES_TIER_2 = [exports.overseer, exports.cruiser, exports.underseer];
+    exports.director.UPGRADES_TIER_2 = [exports.overseer, exports.cruiser, exports.underseer, exports.lilfact];
         exports.director.UPGRADES_TIER_3 = [exports.factory];
         exports.overseer.UPGRADES_TIER_3 = [exports.overlord, exports.overtrap, exports.overgunner];  
         exports.underseer.UPGRADES_TIER_3 = [exports.necromancer];
         exports.cruiser.UPGRADES_TIER_3 = [exports.carrier, exports.battleship, exports.fortress];
+
+    exports.pound.UPGRADES_TIER_2 = [exports.destroy, exports.builder, exports.artillery, exports.launch];
+
+    exports.trapper.UPGRADES_TIER_2 = [exports.builder, exports.tritrap, exports.flanktrap];
